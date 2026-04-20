@@ -1,0 +1,910 @@
+{
+  "name": "[MKTCOM] disparo-oficial",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        200
+      ],
+      "id": "4ff2049c-70e9-4ae9-9be3-7384b13ab0c2",
+      "name": "Disparo Manual"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "wpp_campanhas",
+        "returnAll": false,
+        "limit": 1,
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "status",
+              "condition": "eq",
+              "keyValue": "pronta"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        40,
+        200
+      ],
+      "id": "976b8b12-0cec-4d28-a82d-35e6eb36a70e",
+      "name": "Buscar Campanha Pronta",
+      "credentials": {
+        "supabaseApi": {
+          "id": "E124roxIkDjglv24",
+          "name": "Supabase - [Com&Mkt]"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "wpp_campanhas",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $json.id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "status",
+              "fieldValue": "disparando"
+            },
+            {
+              "fieldId": "started_at",
+              "fieldValue": "={{ new Date().toISOString() }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        280,
+        200
+      ],
+      "id": "bce807a7-4702-4146-a345-204cb7c8eac3",
+      "name": "Iniciar Campanha",
+      "credentials": {
+        "supabaseApi": {
+          "id": "E124roxIkDjglv24",
+          "name": "Supabase - [Com&Mkt]"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "wpp_destinatarios",
+        "returnAll": true,
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "campanha_id",
+              "condition": "eq",
+              "keyValue": "={{ $json.id }}"
+            },
+            {
+              "keyName": "status",
+              "condition": "eq",
+              "keyValue": "pendente"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        520,
+        200
+      ],
+      "id": "31d951cf-2ca5-4ab0-9080-159e23961d5c",
+      "name": "Buscar Destinatários",
+      "credentials": {
+        "supabaseApi": {
+          "id": "E124roxIkDjglv24",
+          "name": "Supabase - [Com&Mkt]"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        760,
+        200
+      ],
+      "id": "0fbfb787-1073-48f5-9263-cf89e9586264",
+      "name": "Loop"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v22.0/950546414815263/messages",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "whatsAppApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $json.telefone }}\",\n  \"type\": \"template\",\n  \"template\": {\n    \"name\": \"{{ $('Buscar Campanha Pronta').first().json.template_name }}\",\n    \"language\": {\n      \"code\": \"{{ $('Buscar Campanha Pronta').first().json.template_language }}\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1020,
+        260
+      ],
+      "id": "0c4e907d-9c45-4fc8-ab8c-734ecfc59c1d",
+      "name": "Enviar WhatsApp",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "kNfW4MC2xJaFa6n0",
+          "name": "Whatsapp Marketing"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "0028a522-fa9c-4075-9547-49bb647bd96e",
+              "leftValue": "={{ $json.messages }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1280,
+        260
+      ],
+      "id": "b30d1af2-9360-4f9a-a1e0-29dd17dac5d9",
+      "name": "Envio OK?"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "wpp_destinatarios",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $('Loop').item.json.id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "status",
+              "fieldValue": "enviado"
+            },
+            {
+              "fieldId": "wamid",
+              "fieldValue": "={{ $json.messages[0].id }}"
+            },
+            {
+              "fieldId": "enviado_at",
+              "fieldValue": "={{ new Date().toISOString() }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        180
+      ],
+      "id": "53f913f2-940b-46da-96f5-b98e1fa22a09",
+      "name": "Marcar Enviado",
+      "credentials": {
+        "supabaseApi": {
+          "id": "E124roxIkDjglv24",
+          "name": "Supabase - [Com&Mkt]"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "wpp_destinatarios",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $('Loop').item.json.id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "status",
+              "fieldValue": "falha"
+            },
+            {
+              "fieldId": "erro",
+              "fieldValue": "={{ $json.message || 'Erro no envio' }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        360
+      ],
+      "id": "bd6a6c7f-fb68-4f83-addb-84b310718a94",
+      "name": "Marcar Falha",
+      "credentials": {
+        "supabaseApi": {
+          "id": "E124roxIkDjglv24",
+          "name": "Supabase - [Com&Mkt]"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 2
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1760,
+        260
+      ],
+      "id": "fa92bd24-a60d-4c27-89bf-8a28aea90ac1",
+      "name": "Aguardar",
+      "webhookId": "0dbb6c63-156c-4f76-9aac-f3b647de83ce"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "wpp_campanhas",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $('Buscar Campanha Pronta').first().json.id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "status",
+              "fieldValue": "concluida"
+            },
+            {
+              "fieldId": "finished_at",
+              "fieldValue": "={{ new Date().toISOString() }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1020,
+        60
+      ],
+      "id": "4b849f6a-ea7b-4414-9db1-e5a9d323caaa",
+      "name": "Finalizar Campanha",
+      "credentials": {
+        "supabaseApi": {
+          "id": "E124roxIkDjglv24",
+          "name": "Supabase - [Com&Mkt]"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ],
+        "options": {}
+      },
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        -200
+      ],
+      "id": "3d4169f6-74f8-4664-a170-0c9be7c81319",
+      "name": "WhatsApp Trigger",
+      "webhookId": "d101dc03-8802-402f-8639-1771c7226e0d",
+      "credentials": {
+        "whatsAppTriggerApi": {
+          "id": "QBy0v1GZcHbJEpLU",
+          "name": "Trigger Whatsapp Marketing"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "edfcb8df-54b9-4f4a-9394-de4ee206eb05",
+              "leftValue": "={{ $json.messages[0].text.body }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        40,
+        -200
+      ],
+      "id": "70b33a66-e116-4807-b87f-6c1783239890",
+      "name": "Tem Texto?"
+    },
+    {
+      "parameters": {
+        "tableId": "wpp_respostas",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "telefone",
+              "fieldValue": "={{ $json.contacts[0].wa_id }}"
+            },
+            {
+              "fieldId": "tipo",
+              "fieldValue": "texto"
+            },
+            {
+              "fieldId": "conteudo",
+              "fieldValue": "={{ $json.messages[0].text.body }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        320,
+        -300
+      ],
+      "id": "1628f447-9d0f-4995-9701-912ec80e6299",
+      "name": "Salvar Resposta Texto",
+      "credentials": {
+        "supabaseApi": {
+          "id": "E124roxIkDjglv24",
+          "name": "Supabase - [Com&Mkt]"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "ee61af92-052f-497a-a1be-319165c723ad",
+              "leftValue": "={{ $json.messages[0].button.payload }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        320,
+        -100
+      ],
+      "id": "4ae9226e-e3ec-4d5b-99a4-e45d2b381a46",
+      "name": "Tem Botão?"
+    },
+    {
+      "parameters": {
+        "tableId": "wpp_respostas",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "telefone",
+              "fieldValue": "={{ $('WhatsApp Trigger').item.json.contacts[0].wa_id }}"
+            },
+            {
+              "fieldId": "tipo",
+              "fieldValue": "botao"
+            },
+            {
+              "fieldId": "conteudo",
+              "fieldValue": "={{ $('WhatsApp Trigger').item.json.messages[0].button.text }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        600,
+        -200
+      ],
+      "id": "d070939d-b261-4bdb-8600-8cf8148c40ef",
+      "name": "Salvar Resposta Botão",
+      "credentials": {
+        "supabaseApi": {
+          "id": "E124roxIkDjglv24",
+          "name": "Supabase - [Com&Mkt]"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.statuses[0].status }}",
+                    "rightValue": "read",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "4c10815a-ae81-440b-9fd0-f7cbf2b16a5b"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.statuses[0].status }}",
+                    "rightValue": "delivered",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    },
+                    "id": "e646194f-46ee-4e59-a800-1839409cad54"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.statuses[0].status }}",
+                    "rightValue": "failed",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    },
+                    "id": "608742e0-bd1c-4251-be2a-afc8bc7314d9"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        600,
+        -40
+      ],
+      "id": "a1b50acd-8b51-4303-b97a-9e49e619c0cc",
+      "name": "Tipo de Status"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "wpp_destinatarios",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "wamid",
+              "condition": "eq",
+              "keyValue": "={{ $json.statuses[0].id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "status",
+              "fieldValue": "lido"
+            },
+            {
+              "fieldId": "lido_at",
+              "fieldValue": "={{ new Date().toISOString() }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        880,
+        -120
+      ],
+      "id": "5932273d-a9e0-4284-92fd-1fa1481d5f70",
+      "name": "Atualizar Lido",
+      "credentials": {
+        "supabaseApi": {
+          "id": "E124roxIkDjglv24",
+          "name": "Supabase - [Com&Mkt]"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "wpp_destinatarios",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "wamid",
+              "condition": "eq",
+              "keyValue": "={{ $json.statuses[0].id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "status",
+              "fieldValue": "entregue"
+            },
+            {
+              "fieldId": "entregue_at",
+              "fieldValue": "={{ new Date().toISOString() }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        880,
+        -40
+      ],
+      "id": "18632ff1-7239-450f-9f7c-36b155ad791d",
+      "name": "Atualizar Entregue",
+      "credentials": {
+        "supabaseApi": {
+          "id": "E124roxIkDjglv24",
+          "name": "Supabase - [Com&Mkt]"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "wpp_destinatarios",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "wamid",
+              "condition": "eq",
+              "keyValue": "={{ $json.statuses[0].id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "status",
+              "fieldValue": "falha"
+            },
+            {
+              "fieldId": "erro",
+              "fieldValue": "=falha na entrega"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        880,
+        40
+      ],
+      "id": "42cb9395-fb02-4f62-9b9b-8af806131c73",
+      "name": "Atualizar Falha Entrega",
+      "credentials": {
+        "supabaseApi": {
+          "id": "E124roxIkDjglv24",
+          "name": "Supabase - [Com&Mkt]"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Disparo Manual": {
+      "main": [
+        [
+          {
+            "node": "Buscar Campanha Pronta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Campanha Pronta": {
+      "main": [
+        [
+          {
+            "node": "Iniciar Campanha",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Iniciar Campanha": {
+      "main": [
+        [
+          {
+            "node": "Buscar Destinatários",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Destinatários": {
+      "main": [
+        [
+          {
+            "node": "Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop": {
+      "main": [
+        [
+          {
+            "node": "Finalizar Campanha",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Enviar WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar WhatsApp": {
+      "main": [
+        [
+          {
+            "node": "Envio OK?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envio OK?": {
+      "main": [
+        [
+          {
+            "node": "Marcar Enviado",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Marcar Falha",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marcar Enviado": {
+      "main": [
+        [
+          {
+            "node": "Aguardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marcar Falha": {
+      "main": [
+        [
+          {
+            "node": "Aguardar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aguardar": {
+      "main": [
+        [
+          {
+            "node": "Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp Trigger": {
+      "main": [
+        [
+          {
+            "node": "Tem Texto?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tem Texto?": {
+      "main": [
+        [
+          {
+            "node": "Salvar Resposta Texto",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tem Botão?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tem Botão?": {
+      "main": [
+        [
+          {
+            "node": "Salvar Resposta Botão",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tipo de Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tipo de Status": {
+      "main": [
+        [
+          {
+            "node": "Atualizar Lido",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Atualizar Entregue",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Atualizar Falha Entrega",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

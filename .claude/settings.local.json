@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python:*)",
+      "mcp__supabase__execute_sql",
+      "mcp__supabase__get_project_url",
+      "Bash(curl:*)",
+      "Bash(python3:*)",
+      "WebSearch",
+      "WebFetch(domain:plurisistemas.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:developer.clickup.com)",
+      "WebFetch(domain:api.clickup.com)",
+      "Bash(ln:*)",
+      "Bash(source .env:*)",
+      "WebFetch(domain:n8n.data.clubpetro.com)",
+      "Bash(echo FAILED:*)",
+      "Bash(echo NOT_FOUND:*)",
+      "Bash(# Search for sales/pipeline/funnel/outbound/SDR related skills in alirezarezvani repo\ngh api repos/alirezarezvani/claude-skills/git/trees/main?recursive=1 2>/dev/null | python3 -c \"\nimport sys, json\ndata = json.load\\(sys.stdin\\)\nkeywords = ['sales', 'pipeline', 'funnel', 'outbound', 'sdr', 'bdr', 'revenue', 'lead', 'prospect', 'crm', 'forecast', 'quota', 'commission']\nfor item in data.get\\('tree', []\\):\n    path = item['path'].lower\\(\\)\n    if any\\(k in path for k in keywords\\) and 'SKILL.md' in item['path']:\n        print\\(item['path']\\)\n\" 2>/dev/null)",
+      "Bash(# Also search for performance/reporting/analytics/dashboard/scorecard related skills\ngh api repos/alirezarezvani/claude-skills/git/trees/main?recursive=1 2>/dev/null | python3 -c \"\nimport sys, json\ndata = json.load\\(sys.stdin\\)\nkeywords = ['dashboard', 'scorecard', 'kpi', 'reporting', 'analytics', 'metric', 'performance', 'forecast', 'revops', 'revenue-ops']\nfor item in data.get\\('tree', []\\):\n    path = item['path'].lower\\(\\)\n    if any\\(k in path for k in keywords\\) and 'SKILL.md' in item['path']:\n        print\\(item['path']\\)\n\" 2>/dev/null)",
+      "Bash(# Search for campaign-analytics and other relevant skills\ngh api repos/alirezarezvani/claude-skills/git/trees/main?recursive=1 2>/dev/null | python3 -c \"\nimport sys, json\ndata = json.load\\(sys.stdin\\)\nkeywords = ['campaign', 'cold', 'outreach', 'prospect', 'enablement', 'quota']\nfor item in data.get\\('tree', []\\):\n    path = item['path'].lower\\(\\)\n    if any\\(k in path for k in keywords\\) and 'SKILL.md' in item['path']:\n        print\\(item['path']\\)\n\" 2>/dev/null)",
+      "WebFetch(domain:thedigitalbloom.com)",
+      "WebFetch(domain:www.apollo.io)",
+      "WebFetch(domain:www.growthtoday.co)",
+      "Bash(grep:*)",
+      "Bash(claude config:*)"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "supabase"
+  ]
+}

@@ -1,0 +1,944 @@
+{
+  "name": "[MKTCOM] mapeamento-anp",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0,30 9-11 * * 1-5"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d509aef9-a2af-4700-b877-2ee5aa097739",
+      "name": "Schedule 9h-12h"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "anp-mapeamento",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        300
+      ],
+      "id": "a4e6a4a8-07a7-414b-958d-04c441b32295",
+      "name": "Webhook Manual",
+      "webhookId": "7ac8ad65-48a5-40fa-be28-c5225911aac3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "42eb2ae1-4a33-447d-8e3d-7b1d0c9c2a84",
+              "leftValue": "={{ $json.shouldProcess }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        820,
+        150
+      ],
+      "id": "bb5a4afb-edd1-47b0-b264-24f76378e71e",
+      "name": "Atualizado Hoje?"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst data = $('Parse & Classify CSV').first().json;\nconst hour = new Date().getHours() - 3; // BRT = UTC-3\n\nif (hour < 12) {\n    // Before noon - stop silently, will retry at next schedule\n    return [{ json: { action: 'retry_later', hour, shouldLog: false } }];\n}\n\n// After noon - log sem_atualizacao\nreturn [{ json: {\n    data_execucao: new Date().toISOString().split('T')[0],\n    hora_execucao: new Date().toTimeString().split(' ')[0],\n    status: 'sem_atualizacao',\n    anp_atualizado_em: data.maxDate || 'nao_encontrado',\n    novos_postos: 0,\n    trocas_bandeira: 0,\n    postos_retirados: 0,\n    notificacao_enviada: false,\n    duracao_segundos: 0,\n    shouldLog: true\n}}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1080,
+        400
+      ],
+      "id": "fc18206d-f7d1-49e6-bf16-2b690d03a8b9",
+      "name": "Check If Should Log"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d9d9d564-38fa-4957-b508-8d838675b4b7",
+              "leftValue": "={{ $json.shouldLog }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1340,
+        400
+      ],
+      "id": "4da40a81-bf54-475b-bcfb-fcf520083df5",
+      "name": "Should Log?"
+    },
+    {
+      "parameters": {
+        "tableId": "vm_anp_execucoes",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "status",
+              "fieldValue": "={{ $json.status }}"
+            },
+            {
+              "fieldId": "anp_atualizado_em",
+              "fieldValue": "={{ $json.anp_atualizado_em }}"
+            },
+            {
+              "fieldId": "novos_postos",
+              "fieldValue": "=0"
+            },
+            {
+              "fieldId": "trocas_bandeira",
+              "fieldValue": "=0"
+            },
+            {
+              "fieldId": "postos_retirados",
+              "fieldValue": "=0"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        340
+      ],
+      "id": "82137e17-e0fb-4408-84d4-721c0ac832c5",
+      "name": "Log Sem Atualização",
+      "credentials": {
+        "supabaseApi": {
+          "id": "E124roxIkDjglv24",
+          "name": "Supabase - [Com&Mkt]"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "vm_anp_execucoes",
+        "returnAll": false,
+        "limit": 1,
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "data_execucao",
+              "condition": "eq",
+              "keyValue": "={{ new Date().toISOString().split('T')[0] }}"
+            },
+            {
+              "keyName": "status",
+              "condition": "eq",
+              "keyValue": "concluido"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1080,
+        0
+      ],
+      "id": "498a7425-f84a-45be-a184-f0ec8d6bdee4",
+      "name": "Check Idempotency",
+      "credentials": {
+        "supabaseApi": {
+          "id": "E124roxIkDjglv24",
+          "name": "Supabase - [Com&Mkt]"
+        }
+      },
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1b321f2f-63fc-4c6a-9dd6-f42e7b107af3",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notExists"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1340,
+        0
+      ],
+      "id": "7c4f93ca-3673-4e70-b6fc-b83507a563bb",
+      "name": "Já Processou?"
+    },
+    {
+      "parameters": {
+        "url": "https://www.gov.br/anp/pt-br/centrais-de-conteudo/dados-abertos/arquivos/arquivos-dados-cadastrais-dos-revendedores-varejistas-de-combustiveis-automotivos/dados-cadastrais-revendedores-varejistas-combustiveis-automoveis.csv",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1600,
+        -60
+      ],
+      "id": "51e7053d-3a9b-4a39-9017-a83649d943bf",
+      "name": "Download CSV",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 10000
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst startTime = Date.now();\nconst raw = $input.first().json.data || $input.first().json.body || '';\n\n// Parse CSV (separator ;)\nconst lines = raw.split('\\n');\nif (lines.length < 2) {\n    throw new Error('CSV vazio ou inválido: ' + lines.length + ' linhas');\n}\n\n// Parse headers - handle BOM and quotes\nlet headerLine = lines[0].replace(/^\\uFEFF/, '');\nconst headers = headerLine.split(';').map(h => h.trim().replace(/^\"|\"$/g, '').toUpperCase());\n\n// Find column indices\nconst colMap = {};\nconst colNames = {\n    'CNPJ': ['CNPJ DO REVENDA', 'CNPJ', 'CNPJ_REVENDA'],\n    'RAZAO': ['RAZÃO SOCIAL', 'RAZAO SOCIAL', 'RAZAO_SOCIAL'],\n    'FANTASIA': ['NOME FANTASIA', 'NOME_FANTASIA'],\n    'BANDEIRA': ['BANDEIRA'],\n    'ENDERECO': ['ENDEREÇO', 'ENDERECO'],\n    'BAIRRO': ['BAIRRO'],\n    'CEP': ['CEP'],\n    'MUNICIPIO': ['MUNICÍPIO', 'MUNICIPIO'],\n    'UF': ['ESTADO', 'UF'],\n    'DATA_PUB': ['DATA DE PUBLICAÇÃO DPA', 'DATAPUBLICACAO', 'DATA PUBLICAÇÃO', 'DATA_PUBLICACAO'],\n    'DATA_VINC': ['DATA DA VINCULAÇÃO BANDEIRA', 'DATAVINCULACAO', 'DATA VINCULAÇÃO', 'DATA_VINCULACAO']\n};\n\nfor (const [key, variants] of Object.entries(colNames)) {\n    for (const variant of variants) {\n        const idx = headers.indexOf(variant);\n        if (idx !== -1) {\n            colMap[key] = idx;\n            break;\n        }\n    }\n}\n\n// Helper: parse DD/MM/YYYY to Date object\nfunction parseDate(str) {\n    if (!str || !str.trim()) return null;\n    const parts = str.trim().split('/');\n    if (parts.length !== 3) return null;\n    const d = parseInt(parts[0]), m = parseInt(parts[1]), y = parseInt(parts[2]);\n    if (isNaN(d) || isNaN(m) || isNaN(y)) return null;\n    return new Date(y, m - 1, d);\n}\n\n// Today in DD/MM/YYYY format\nconst now = new Date();\nconst today = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;\nconst todayDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());\n\nconst novos = [];\nconst trocas = [];\nconst allCnpjs = [];\nlet totalRows = 0;\nlet maxDateObj = null;\nlet maxDateStr = '';\n\nfor (let i = 1; i < lines.length; i++) {\n    const line = lines[i].trim();\n    if (!line) continue;\n    totalRows++;\n\n    const values = line.split(';').map(v => v.trim().replace(/^\"|\"$/g, ''));\n\n    const cnpjRaw = colMap.CNPJ !== undefined ? values[colMap.CNPJ] : '';\n    const cnpjDigits = cnpjRaw.replace(/\\D/g, '');\n    if (!cnpjDigits || cnpjDigits.length !== 14) continue;\n\n    allCnpjs.push(cnpjDigits);\n\n    const dataPub = colMap.DATA_PUB !== undefined ? values[colMap.DATA_PUB] : '';\n    const dataVinc = colMap.DATA_VINC !== undefined ? values[colMap.DATA_VINC] : '';\n\n    // Track max date across both date columns\n    for (const ds of [dataPub, dataVinc]) {\n        const dt = parseDate(ds);\n        if (dt && (!maxDateObj || dt > maxDateObj)) {\n            maxDateObj = dt;\n            maxDateStr = ds.trim();\n        }\n    }\n\n    // Normalize dates for comparison (pad to DD/MM/YYYY)\n    const normPub = dataPub ? dataPub.trim().split('/').map((p,i) => i < 2 ? p.padStart(2,'0') : p).join('/') : '';\n    const normVinc = dataVinc ? dataVinc.trim().split('/').map((p,i) => i < 2 ? p.padStart(2,'0') : p).join('/') : '';\n\n    // vm_anp convention: cnpj = formatted, cnpj2 = plain digits\n    const cnpjFormatted = cnpjDigits.replace(/^(\\d{2})(\\d{3})(\\d{3})(\\d{4})(\\d{2})$/, '$1.$2.$3/$4-$5');\n\n    const posto = {\n        cnpj: cnpjFormatted,\n        cnpj2: cnpjDigits,\n        razao_social: colMap.RAZAO !== undefined ? values[colMap.RAZAO] : '',\n        bandeira: colMap.BANDEIRA !== undefined ? values[colMap.BANDEIRA] : '',\n        uf: colMap.UF !== undefined ? values[colMap.UF] : '',\n        cidade: colMap.MUNICIPIO !== undefined ? values[colMap.MUNICIPIO] : '',\n        endereco: colMap.ENDERECO !== undefined ? values[colMap.ENDERECO] : '',\n        bairro: colMap.BAIRRO !== undefined ? values[colMap.BAIRRO] : '',\n        cep: colMap.CEP !== undefined ? values[colMap.CEP].replace(/\\D/g, '') : '',\n    };\n\n    if (normPub === today) {\n        novos.push(posto);\n    } else if (normVinc === today) {\n        trocas.push({ ...posto, bandeira_nova: posto.bandeira });\n    }\n}\n\n// Check if max date in CSV = today\nconst maxDateNorm = maxDateObj\n    ? `${String(maxDateObj.getDate()).padStart(2,'0')}/${String(maxDateObj.getMonth()+1).padStart(2,'0')}/${maxDateObj.getFullYear()}`\n    : 'nenhuma';\nconst isUpdatedToday = maxDateObj && maxDateObj.getTime() === todayDate.getTime();\n\nconst elapsed = Math.round((Date.now() - startTime) / 1000);\n\nreturn [{\n    json: {\n        novos,\n        trocas,\n        allCnpjs,\n        totalRows,\n        totalCnpjs: allCnpjs.length,\n        novosCount: novos.length,\n        trocasCount: trocas.length,\n        today,\n        maxDate: maxDateNorm,\n        maxDateRaw: maxDateStr,\n        shouldProcess: isUpdatedToday,\n        colMap,\n        parseTime: elapsed\n    }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1900,
+        -60
+      ],
+      "id": "b5568d76-9272-40bf-af65-f8269fadc5d5",
+      "name": "Parse & Classify CSV"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "vm_anp",
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        2200,
+        -60
+      ],
+      "id": "eb0b5f95-4a8c-4c87-8447-73ee3a81e672",
+      "name": "Get ANP Records",
+      "credentials": {
+        "supabaseApi": {
+          "id": "E124roxIkDjglv24",
+          "name": "Supabase - [Com&Mkt]"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst startTime = Date.now();\nconst anpRecords = $input.all().map(item => item.json);\nconst parsed = $('Parse & Classify CSV').first().json;\n\nconst csvCnpjSet = new Set(parsed.allCnpjs);\n\n// vm_anp uses: cnpj = formatted (XX.XXX.XXX/XXXX-XX), cnpj2 = plain digits\n// CSV uses plain digits. Compare via cnpj2.\nconst retirados = anpRecords\n    .filter(r => r.cnpj2 && !csvCnpjSet.has(r.cnpj2))\n    .map(r => ({\n        cnpj: r.cnpj || '',\n        cnpj2: r.cnpj2 || '',\n        razao_social: r.razao_social || '',\n        bandeira: r.bandeira || '',\n        uf: r.uf || '',\n        cidade: r.cidade || ''\n    }));\n\n// Add old bandeira to trocas (keyed by plain digits = cnpj2)\nconst anpMap = new Map(anpRecords.map(r => [r.cnpj2, r]));\nconst trocas = parsed.trocas.map(t => {\n    const current = anpMap.get(t.cnpj2);  // t.cnpj2 = plain digits = vm_anp.cnpj2\n    return {\n        ...t,\n        bandeira_antiga: current ? current.bandeira : 'DESCONHECIDA',\n        bandeira_nova: t.bandeira_nova || t.bandeira\n    };\n}).filter(t => t.bandeira_antiga !== t.bandeira_nova);\n\nconst elapsed = Math.round((Date.now() - startTime) / 1000);\n\nreturn [{\n    json: {\n        p_trocas: JSON.stringify(trocas),\n        p_novos: JSON.stringify(parsed.novos),\n        p_retirados: JSON.stringify(retirados),\n        summary: {\n            trocas: trocas.length,\n            novos: parsed.novos.length,\n            retirados: retirados.length,\n            total_csv: parsed.totalCnpjs,\n            total_anp: anpRecords.length\n        },\n        detectTime: elapsed\n    }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2500,
+        -60
+      ],
+      "id": "537fa2b0-2756-4254-9121-0830c7c84e15",
+      "name": "Detect & Prepare"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://azmtxhjtqodtaeoshrye.supabase.co/rest/v1/rpc/fn_process_anp_changes",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "supabaseApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"p_trocas\": {{ $json.p_trocas }},\n  \"p_novos\": {{ $json.p_novos }},\n  \"p_retirados\": {{ $json.p_retirados }}\n}",
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2800,
+        -60
+      ],
+      "id": "fab15291-7c7e-4e64-9e57-7be1d0021aec",
+      "name": "Execute Changes (RPC)",
+      "credentials": {
+        "supabaseApi": {
+          "id": "E124roxIkDjglv24",
+          "name": "Supabase - [Com&Mkt]"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://azmtxhjtqodtaeoshrye.supabase.co/rest/v1/rpc/fn_refresh_mv_postos_socios",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "supabaseApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3100,
+        -60
+      ],
+      "id": "9753a7e8-3b62-465b-bb63-6256fdcea057",
+      "name": "Refresh MV Postos Socios",
+      "credentials": {
+        "supabaseApi": {
+          "id": "E124roxIkDjglv24",
+          "name": "Supabase - [Com&Mkt]"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst summary = $('Detect & Prepare').first().json.summary;\nconst trocas = JSON.parse($('Detect & Prepare').first().json.p_trocas);\nconst novos = JSON.parse($('Detect & Prepare').first().json.p_novos);\n\nconst today = new Date().toISOString().split('T')[0];\nconst hasChanges = summary.novos > 0 || summary.trocas > 0 || summary.retirados > 0;\n\n// Build RPC calls to get prospects (socios) from mv_postos_socios, filtered by vm_telefones\nconst rpcCalls = [];\nconst listsToCreate = [];\n\nif (trocas.length > 0) {\n    rpcCalls.push({\n        p_cnpjs: trocas.map(t => t.cnpj2),\n        p_nome_lista: `alteracao-anp-${today}`,\n        tipo: 'troca_bandeira',\n        qtd_cnpjs: trocas.length\n    });\n}\n\nif (novos.length > 0) {\n    rpcCalls.push({\n        p_cnpjs: novos.map(n => n.cnpj2),\n        p_nome_lista: `novo-posto-${today}`,\n        tipo: 'novo_posto',\n        qtd_cnpjs: novos.length\n    });\n}\n\n// Build WhatsApp notification message\nconst wppMessage = hasChanges\n    ? `🏪 *Mapeamento ANP - ${today}*\\n\\n` +\n      `📊 Resumo:\\n` +\n      `• ${summary.novos} novo(s) posto(s)\\n` +\n      `• ${summary.trocas} troca(s) de bandeira\\n` +\n      `• ${summary.retirados} posto(s) retirado(s)\\n\\n` +\n      `📋 Total base: ${summary.total_csv} postos`\n    : `🏪 *Mapeamento ANP - ${today}*\\n\\n✅ Sem alterações detectadas hoje.`;\n\nreturn [{\n    json: {\n        rpcCalls,\n        summary,\n        wppMessage,\n        hasChanges,\n        today\n    }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3400,
+        -60
+      ],
+      "id": "60462e3f-d7c0-4fb8-8fd3-503e9351ea7e",
+      "name": "Prepare Prospects & Lists"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6a56761b-0a40-4a7f-9a1f-9a6a12d272af",
+              "leftValue": "={{ $json.rpcCalls.length }}",
+              "rightValue": "0",
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3700,
+        -60
+      ],
+      "id": "ff88afc8-e4ef-44e5-b934-d2fc09419aa4",
+      "name": "Has Sheets Data?"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst data = $('Prepare Prospects & Lists').first().json;\nconst results = [];\n\nfor (const call of data.rpcCalls) {\n    // Call fn_get_prospects_for_cnpjs via Supabase REST\n    const resp = await this.helpers.httpRequest({\n        method: 'POST',\n        url: 'https://azmtxhjtqodtaeoshrye.supabase.co/rest/v1/rpc/fn_get_prospects_for_cnpjs',\n        headers: {\n            'Content-Type': 'application/json',\n            'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF6bXR4aGp0cW9kdGFlb3NocnllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTI4NTM1ODUsImV4cCI6MjAyODQyOTU4NX0.KvQovDvmATwBPc50oqnY_yJqjqoywZdSXm_bz5qn4V0',\n            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF6bXR4aGp0cW9kdGFlb3NocnllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTI4NTM1ODUsImV4cCI6MjAyODQyOTU4NX0.KvQovDvmATwBPc50oqnY_yJqjqoywZdSXm_bz5qn4V0'\n        },\n        body: {\n            p_cnpjs: call.p_cnpjs,\n            p_nome_lista: call.p_nome_lista\n        },\n        json: true\n    });\n\n    const prospects = Array.isArray(resp) ? resp : [];\n    results.push(...prospects);\n\n    // Also push list metadata\n    data.rpcCalls.find(c => c.p_nome_lista === call.p_nome_lista)._qtd_cpfs = prospects.length;\n}\n\nreturn [{ json: { prospects: results, rpcCalls: data.rpcCalls, summary: data.summary } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3960,
+        -120
+      ],
+      "id": "63fdc136-e774-4486-a244-93b63aa7d53f",
+      "name": "Fetch Prospects (RPC)"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst data = $input.first().json;\nif (!data.prospects || data.prospects.length === 0) return [];\nreturn data.prospects.map(p => ({ json: { nome: p.nome, cpf: p.cpf, nome_lista: p.nome_lista } }));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4240,
+        -180
+      ],
+      "id": "79a67776-04f5-4264-a27c-df25bc5614ea",
+      "name": "Prepare Sheets Items"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1RfYvcQ_dF6n6jPnizharA6L1yzeLCy3J_iH8XcIo5RQ/edit",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 0,
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RfYvcQ_dF6n6jPnizharA6L1yzeLCy3J_iH8XcIo5RQ/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {}
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        4520,
+        -180
+      ],
+      "id": "e61525c4-9cd1-4a4d-bbf6-08c5e862c7d7",
+      "name": "Write Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "OL50dab7dT1eN5gq",
+          "name": "sheets_andre"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst data = $('Fetch Prospects (RPC)').first().json;\nreturn data.rpcCalls.map(call => ({\n    json: {\n        nome_lista: call.p_nome_lista,\n        tipo: call.tipo,\n        qtd_cnpjs: call.qtd_cnpjs,\n        qtd_cpfs: call._qtd_cpfs || 0,\n        status: 'pendente',\n        sheets_url: 'https://docs.google.com/spreadsheets/d/1RfYvcQ_dF6n6jPnizharA6L1yzeLCy3J_iH8XcIo5RQ',\n        resumo: JSON.stringify(data.summary)\n    }\n}));\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4240,
+        200
+      ],
+      "id": "e57be667-bfb4-40dd-90b5-0a725a867915",
+      "name": "Prepare List Records"
+    },
+    {
+      "parameters": {
+        "tableId": "vm_listas_anp",
+        "dataToSend": "autoMapInputData"
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        4300,
+        200
+      ],
+      "id": "20da78f6-c277-41c8-8b27-37e66f6dfb5a",
+      "name": "Insert Listas ANP",
+      "credentials": {
+        "supabaseApi": {
+          "id": "E124roxIkDjglv24",
+          "name": "Supabase - [Com&Mkt]"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        4560,
+        -60
+      ],
+      "id": "ad68e3cd-ad90-4e23-b5f3-460b6e42349d",
+      "name": "Converge"
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst data = $('Prepare Prospects & Lists').first().json;\nconst startStr = $('Parse & Classify CSV').first().json.parseTime || 0;\nconst detectStr = $('Detect & Prepare').first().json.detectTime || 0;\n\nreturn [{\n    json: {\n        status: 'concluido',\n        anp_atualizado_em: data.today,\n        novos_postos: data.summary.novos,\n        trocas_bandeira: data.summary.trocas,\n        postos_retirados: data.summary.retirados,\n        notificacao_enviada: false,\n        duracao_segundos: startStr + detectStr + 10\n    }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4800,
+        -60
+      ],
+      "id": "8fed13f6-fcc1-468f-8ce0-00adca69789e",
+      "name": "Prepare Exec Log"
+    },
+    {
+      "parameters": {
+        "tableId": "vm_anp_execucoes",
+        "dataToSend": "autoMapInputData"
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        5080,
+        -60
+      ],
+      "id": "05dbc453-07c4-4ec6-ae8a-f25d3c0f42f5",
+      "name": "Insert Exec Log",
+      "credentials": {
+        "supabaseApi": {
+          "id": "E124roxIkDjglv24",
+          "name": "Supabase - [Com&Mkt]"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "\nconst msg = $('Prepare Prospects & Lists').first().json.wppMessage;\nreturn [{ json: { number: '120363406760037910@g.us', text: msg } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5300,
+        -60
+      ],
+      "id": "6b754926-bd56-496a-a788-f67a30dfb318",
+      "name": "Prepare WPP Payload"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://evolution-evolution.mzpvnn.easypanel.host/message/sendText/andre_grupos",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\"number\": \"{{ $json.number }}\", \"text\": \"{{ $json.text }}\"}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        5560,
+        -60
+      ],
+      "id": "e7c16ae2-0871-461e-b418-990e9fa01ead",
+      "name": "Send WhatsApp",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "4nttNefSqX8Fk0qT",
+          "name": "Evolution API - WhatsApp"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "vm_anp_execucoes",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $('Insert Exec Log').first().json.id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "notificacao_enviada",
+              "fieldValue": "=true"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        5640,
+        -60
+      ],
+      "id": "7f8ccee2-46f6-4545-9e57-adcdf3356942",
+      "name": "Mark Notified",
+      "credentials": {
+        "supabaseApi": {
+          "id": "E124roxIkDjglv24",
+          "name": "Supabase - [Com&Mkt]"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Schedule 9h-12h": {
+      "main": [
+        [
+          {
+            "node": "Check Idempotency",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Manual": {
+      "main": [
+        [
+          {
+            "node": "Check Idempotency",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Idempotency": {
+      "main": [
+        [
+          {
+            "node": "Já Processou?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Já Processou?": {
+      "main": [
+        [
+          {
+            "node": "Download CSV",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Download CSV": {
+      "main": [
+        [
+          {
+            "node": "Parse & Classify CSV",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse & Classify CSV": {
+      "main": [
+        [
+          {
+            "node": "Atualizado Hoje?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Atualizado Hoje?": {
+      "main": [
+        [
+          {
+            "node": "Get ANP Records",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Check If Should Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check If Should Log": {
+      "main": [
+        [
+          {
+            "node": "Should Log?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Should Log?": {
+      "main": [
+        [
+          {
+            "node": "Log Sem Atualização",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Get ANP Records": {
+      "main": [
+        [
+          {
+            "node": "Detect & Prepare",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Detect & Prepare": {
+      "main": [
+        [
+          {
+            "node": "Execute Changes (RPC)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Changes (RPC)": {
+      "main": [
+        [
+          {
+            "node": "Refresh MV Postos Socios",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Refresh MV Postos Socios": {
+      "main": [
+        [
+          {
+            "node": "Prepare Prospects & Lists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Prospects & Lists": {
+      "main": [
+        [
+          {
+            "node": "Has Sheets Data?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Sheets Data?": {
+      "main": [
+        [
+          {
+            "node": "Fetch Prospects (RPC)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Converge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Prospects (RPC)": {
+      "main": [
+        [
+          {
+            "node": "Prepare Sheets Items",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Prepare List Records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Sheets Items": {
+      "main": [
+        [
+          {
+            "node": "Write Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Sheets": {
+      "main": [
+        [
+          {
+            "node": "Converge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare List Records": {
+      "main": [
+        [
+          {
+            "node": "Insert Listas ANP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert Listas ANP": {
+      "main": [
+        [
+          {
+            "node": "Converge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Converge": {
+      "main": [
+        [
+          {
+            "node": "Prepare Exec Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Exec Log": {
+      "main": [
+        [
+          {
+            "node": "Insert Exec Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert Exec Log": {
+      "main": [
+        [
+          {
+            "node": "Prepare WPP Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare WPP Payload": {
+      "main": [
+        [
+          {
+            "node": "Send WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send WhatsApp": {
+      "main": [
+        [
+          {
+            "node": "Mark Notified",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
