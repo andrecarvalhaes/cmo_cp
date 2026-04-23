@@ -14,32 +14,36 @@ Padrão: `[DATA] [J] [OBJETIVO] [ESTÁGIO] [CONTEÚDO/LP]`
 - `[TRÁFEGO]` = visitas ao site (OUTCOME_TRAFFIC)
 - `[TOPO]` / `[F]` / `[Q]` / `[MEIO]` = indicadores de estágio de funil (nem sempre presentes)
 
-## Spend Mensal 2026
-| Mês | Spend | Leads (Meta) | CPL (Meta) |
-|-----|-------|-------------|------------|
-| Jan/26 | R$ 4.989 | 680 | R$ 7,34 |
-| Fev/26 | R$ 7.036 | 690 | R$ 10,20 |
-| Mar/26 | R$ 9.371 | 518 | R$ 18,09 |
-| Abr/26* | R$ 5.597 | 270 | R$ 20,73 |
-| **Total** | **R$ 26.993** | **2.158** | **R$ 12,51** |
+## Spend Mensal 2026 (atualizado 21/Abr/2026 via API)
+| Mês | Spend | Impressões | Cliques | CTR | Leads (Meta) | CPL (Meta) |
+|-----|-------|-----------|---------|-----|-------------|------------|
+| Jan/26 | R$ 4.989 | 1.122.029 | 11.938 | 1,06% | 340 | R$ 14,67 |
+| Fev/26 | R$ 7.036 | 584.529 | 6.705 | 1,15% | 345 | R$ 20,39 |
+| Mar/26 | R$ 9.371 | 671.722 | 6.825 | 1,02% | 259 | R$ 36,18 |
+| Abr/26* | R$ 7.030 | 567.384 | 5.250 | 0,93% | 148 | R$ 47,50 |
+| **Total** | **R$ 28.426** | **2.945.664** | **30.718** | **1,04%** | **1.092** | **R$ 26,03** |
+
+> *Abr/26 = parcial até 21/Abr. Leads = action_type "lead" (pixel + lead forms). Valores anteriores (680, 690, 518, 270) provavelmente incluíam onsite_web_lead duplicado — agora usando apenas "lead" action_type.*
 
 ## DIVERGÊNCIA CRÍTICA: 3 camadas de "lead"
 
-### Camada 1 — Meta Ads reporta: 2.158 leads
-Contagem da plataforma. Inclui qualquer evento de conversão (pixel fire, lead form, etc.)
+### Camada 1 — Meta Ads reporta: 1.092 leads (action_type=lead)
+Contagem da plataforma. Pixel fire + lead forms.
 
-### Camada 2 — Supabase (BD_Conversoes_RD, source=meta): ~1.015 leads
-Leads que efetivamente entraram no RD Station. Diferença de ~1.143 (provavelmente: eventos duplicados no pixel, formulários incompletos, ou definição diferente de "conversão")
+### Camada 2 — Supabase (BD_Conversoes_RD, utm_source=meta/ig/facebook): 1.045 leads únicos
+Leads que efetivamente entraram no RD Station. Diferença de ~47 = eventos de pixel sem form submit real.
 
-### Camada 3 — MQLs (BD_RDOportunidades, source=meta): 142 MQLs
+### Camada 3 — MQLs (BD_RDOportunidades, fc/lc_source=meta/ig): 96 MQLs
 Leads qualificados como oportunidade. **Este é o número real para o CMO.**
 
-| Mês | Leads Meta | Leads RD (real) | MQLs | Taxa Lead→MQL |
-|-----|-----------|----------------|------|---------------|
-| Jan | 680 | 261 | 22 | 8,4% |
-| Fev | 690 | 303 | 33 | 10,9% |
-| Mar | 518 | 205 | 61 | 29,8% |
-| Abr* | 270 | 151 | 26 | 17,2% |
+| Mês | Leads Meta | Leads RD (únicos) | MQLs | Taxa Lead→MQL |
+|-----|-----------|-------------------|------|---------------|
+| Jan | 340 | 237 | 14 | 5,9% |
+| Fev | 345 | 267 | 23 | 8,6% |
+| Mar | 259 | 258 | 35 | 13,6% |
+| Abr* | 148 | 150 | 24 | 16,0% |
+
+> *MQLs filtrados por: id_kommo IS NOT NULL, relacao_posto IN ('Dono(a) ou Diretor(a)', 'Gerente ou Supervisor(a)', 'Não se aplica'), cliente_cp != 'Sim'*
 
 ## PROBLEMA: Topo e Fundo misturados
 
@@ -93,6 +97,37 @@ Leads qualificados como oportunidade. **Este é o número real para o CMO.**
 | TOPO | ~R$ 10.470 | ~26 | **~R$ 403** |
 | FUNDO | ~R$ 12.170 | ~116 | **~R$ 105** |
 | Blended | R$ 26.993 | 142 | **~R$ 190** |
+
+## Convenção de UTMs (Padrão João Augusto)
+
+> **IMPORTANTE**: Padrão válido a partir de ~15/Abr/2026. Campanhas anteriores NÃO seguem essa convenção (source pode ser "facebook", "ads", etc.). Nas análises históricas, considerar ambos os padrões ao filtrar.
+
+### Regras
+1. **Hierarquia rígida**: source/medium SEMPRE alinhado com canal
+   - Meta = `meta / cpc` (nunca "facebook" ou "ads")
+   - Google = `google / cpc`
+2. **Sintaxe limpa**: tudo minúsculas, sem espaços (usar hífens), sem acentos
+3. **Foco no produto**: `utm_campaign` = `[produto]-[objetivo]`
+   - "leads" → traduzir para `cadastro` (consistência do funil)
+4. **Parâmetros dinâmicos**: em Meta/Google Ads, priorizar variáveis dinâmicas (`{{adset.name}}`, `{{ad.name}}`)
+5. **Sem datas**: NUNCA usar meses/datas nas UTMs. Campanhas perpétuas ou identificadas pelo nome
+
+### Exemplo Padrão
+```
+utm_source=meta&utm_medium=cpc&utm_campaign=fidelidade-cadastro&utm_content={{adset.name}}&utm_term={{ad.name}}
+```
+
+### Mapeamento Channel Grouping
+| Canal | source | medium |
+|-------|--------|--------|
+| Meta Ads | meta | cpc |
+| Google Ads | google | cpc |
+
+### Para Análises de Cruzamento
+- Ao cruzar Meta Ads × Supabase × Kommo: filtrar por `source=meta` e `medium=cpc`
+- `utm_campaign` indica produto + objetivo (ex: `fidelidade-cadastro`)
+- `utm_content` = nome do adset (público/segmentação)
+- `utm_term` = nome do anúncio (criativo)
 
 ## Observações
 - Fonte de verdade para leads = `BD_Conversoes_RD` (Supabase)

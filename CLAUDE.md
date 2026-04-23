@@ -50,6 +50,12 @@ Isso se aplica a **todas** as operações com texto: criar tarefas, atualizar ta
 - Ao finalizar uma pendência: usar `/finalizar-task` para reportar o que foi feito (comentário "IA:") e mover para "checando resultados"
 - Para validar se algo funciona: usar `/testar-task` para desenhar e executar testes automatizados
 
+## Brand Book (OBRIGATÓRIO)
+Antes de criar **qualquer comunicação** (texto, email, post, apresentação, peça visual, landing page):
+1. Consultar `brand/brand-quick-reference.md` — referência rápida de marca
+2. Para detalhes completos: `memory/integracoes/brand-identity.md`
+3. Seguir checklist rápido do final do arquivo de referência
+
 ## Idioma
 - Comunicação em português brasileiro
 - Código e configs em inglês

@@ -5,7 +5,7 @@ description: "Exporta todos os leads do Kommo, limpa e recarrega a tabela aux_ko
 
 # Atualizar Kommo — Sync Completo da Base aux_kommo
 
-Exporta TODOS os leads do Kommo (todas as pipelines), apaga a base `aux_kommo` no Supabase e sobe ela atualizada. Inclui contatos (telefones, emails) e todos os custom fields.
+Exporta os leads da **pipeline Fidelidade** (ID 8166623) do Kommo, apaga a base `aux_kommo` no Supabase e sobe ela atualizada. Inclui contatos (telefones, emails) e todos os custom fields.
 
 **Script:** `skills/atualizar-kommo/sync_kommo.py`
 

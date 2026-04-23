@@ -31,6 +31,15 @@ Guias completos em `memory/integracoes/`:
 - `vendemais.md` — Vendemais: sistema integrador interno, stack, estrutura, workflow de PRs
 - `clickup.md` — ClickUp: space Marketing & Comercial, backlogs, sprints, kanban design, time
 - `pendencias-metricas.md` — Métricas pendentes e status geral
+- `clicksign.md` — Clicksign: assinatura eletrônica, credenciais vm_app_keys, fluxo de grupos, variáveis do contrato
+- `scoring-designers.md` — vm_interno_mkt: pontuação designers, tabela de scoring por tipo, workflow N8N (event-driven, vulnerável a desconexão), procedimento de reprocessamento
+- `brand-identity.md` — Brand Book / Identidade Visual: regras de logo, cores, tipografia, tom de voz, templates. Assets em `brand/`
+- `blog-strategy.md` — Arquitetura de Conteúdo do Blog: 12 topic clusters, 6 categorias, 11 pillar pages, diagnóstico GSC, quick wins, plano de priorização
+
+## Brand Book — Referência Rápida
+- **Arquivo de consulta obrigatória**: `brand/brand-quick-reference.md` (checklist + regras + glossário)
+- **Página interativa no Vendemais**: `/marketing/brandbook` (PR #15)
+- **SEMPRE consultar antes de criar qualquer comunicação** (texto, visual, email, post, apresentação)
 
 ## Regras Importantes
 - GA4 = apenas tráfego (sessions). Domínios: `clubpetro.com` + `blog.clubpetro.com` apenas
@@ -71,3 +80,10 @@ Guias completos em `memory/integracoes/`:
 - `/testar-task` - valida trabalho feito: desenha testes, executa, reporta resultados, limpa dados de teste
 - `/pendencia` - intake inteligente: entende demanda, faz análise SCQA, cria tarefa no ClickUp, mapeia soluções ranqueadas por ICE como comentários "IA:"
 - `/atualizar-kommo` - sync completo aux_kommo: exporta TODOS os leads do Kommo (API 3 req/s) + contatos, TRUNCATE + INSERT no Supabase via PostgREST, recria indexes
+- `/review-seo-blog` - auditoria SEO do blog WordPress (blog.clubpetro.com): conecta via REST API, scoring 0-100 por post (6 dimensões), cruza GSC+GA4, plano "eu faço via API" vs "você faz manualmente"
+
+## WordPress Blog
+- **CMS**: WordPress + SEOPress Pro + Elementor
+- **URL**: blog.clubpetro.com
+- **Credenciais**: vm_app_keys (category: marketing) → WORDPRESS_API_URL, WORDPRESS_USERNAME, WORDPRESS_APP_PASSWORD
+- **SEOPress meta fields**: `_seopress_titles_title`, `_seopress_titles_desc`, `_seopress_analysis_target_kw`

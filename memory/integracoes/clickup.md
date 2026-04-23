@@ -98,6 +98,19 @@ Com o ClickUp consigo acompanhar:
 - **Distribuição**: carga por membro do time
 - **Impedimentos**: tarefas bloqueadas
 
+## Fluxo de Criação de Tarefas — Kanban Design
+
+Pipeline automatizado para criar tarefas no kanban dos designers (Marketing 2.0 / Implantação 2.0):
+
+1. **Forms de solicitação**: `C:\Users\ClubPetro-123\Documents\forms_mkt`
+   - Formulários que o time preenche para solicitar demandas de design
+2. **N8N workflow**: https://n8n.data.clubpetro.com/workflow/V5X0rAPeYUzsYcbw
+   - Automação que recebe o form e cria a tarefa no ClickUp
+3. **Kanban Design** (destino): list 901300892447
+   - URL: https://app.clickup.com/9007133809/v/li/901300892447
+
+**Bug resolvido (Abr/2026)**: texto com caracteres especiais (acentos, cedilha) chegava corrompido no kanban. Causa: encoding — mesma regra do CLAUDE.md (usar Python urllib com UTF-8, nunca curl para texto com acentos).
+
 ## Como Consultar (API REST)
 
 ### Tarefas de uma lista

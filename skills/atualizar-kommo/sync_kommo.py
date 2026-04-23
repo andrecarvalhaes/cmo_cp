@@ -14,6 +14,7 @@ KOMMO_BASE = "https://clubpetro.kommo.com/api/v4"
 RATE_DELAY = 0.34          # ~3 req/s
 PAGE_SIZE = 250
 DATA_FILE = "kommo_export.json"
+# Todas as pipelines (sem filtro)
 
 # ── Mapeamento telefone (enum_code Kommo → coluna aux_kommo) ──
 PHONE_COL = {
@@ -73,7 +74,7 @@ def fetch_pages(path, token, params=None, embed_key="leads"):
     while True:
         parts = [f"limit={PAGE_SIZE}", f"page={page}"]
         for k, v in (params or {}).items():
-            parts.append(f"{k}={urllib.parse.quote(str(v))}")
+            parts.append(f"{k}={urllib.parse.quote(str(v), safe=',')}")
         url = f"{KOMMO_BASE}/{path}?{'&'.join(parts)}"
 
         data = api_get(url, token)
@@ -239,11 +240,10 @@ def cmd_extract(args):
     print(f"     {len(pipes)} pipelines, {len(statuses)} estagios")
     time.sleep(RATE_DELAY)
 
-    # 2. Leads (pipeline Fidelidade = 8166623)
-    print("2/4  Leads (Pipe | Fidelidade)...")
+    # 2. Leads (todas as pipelines)
+    print("2/4  Leads (todas as pipelines)...")
     leads = fetch_pages("leads", token,
-                        {"with": "contacts,loss_reason,companies",
-                         "filter[pipeline_id][]": "8166623"},
+                        {"with": "contacts,loss_reason,companies"},
                         "leads")
     print(f"     Total: {len(leads)}")
 

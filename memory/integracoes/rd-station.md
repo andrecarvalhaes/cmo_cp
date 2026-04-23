@@ -3,10 +3,20 @@
 ## Conexão
 - **API**: OAuth2 (access_token + refresh_token)
 - **Client ID**: c66161a0-febd-4db7-ba94-40d0fcf110f5
+- **Client Secret**: Supabase `vm_app_keys` key=`RD_CLIENT_SECRET`
+- **Refresh Token**: Supabase `vm_app_keys` key=`RD_REFRESH_TOKEN`
+- **Access Token**: Supabase `vm_app_keys` key=`RD_ACCESS_TOKEN` (atualizar via refresh)
 - **Base URL**: `https://api.rd.services/platform/`
 - **App name**: n8n_2 (integração via N8N)
 - **Account ID**: 170307789894841983 (analytics) / 741603 (emails)
-- **Token expira**: 24h (refresh necessário)
+- **Token expira**: 24h. Quando expirar, fazer refresh:
+```python
+POST https://api.rd.services/auth/token
+Body: { client_id, client_secret, refresh_token }
+# Salvar novo access_token no Supabase vm_app_keys
+```
+- **Limitação**: API não expõe body/HTML dos emails, apenas metadados (nome, tipo, destinatários, datas)
+- **Total de emails**: 700+ (203 em 2025-2026)
 
 ## Endpoints Disponíveis
 
