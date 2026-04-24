@@ -2,19 +2,17 @@
 .env.*
 __pycache__/
 *.pyc
-ga4_sa.json
+
+# Service account keys
 *_sa.json
 
 # Temporary files
+tmp/
 tmp_*
-valid_columns.json
-backfill_results.json
-backlog_tasks_full.json
-kommo_export.json
+
+# Data exports and large files
+data/
 
 # Large binary assets (brand book assets ~2.7GB)
 brand/
 !brand/brand-quick-reference.md
-
-# Data exports
-analise_instagram_clubpetro.pdf

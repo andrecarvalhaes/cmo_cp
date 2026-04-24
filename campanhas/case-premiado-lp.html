@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Case Premiado | ClubPetro</title>
+  <meta name="description" content="Conte a história de sucesso do seu posto com o ClubPetro e ganhe prêmios. Grave um vídeo, mostre seus resultados e concorra a 1 mensalidade grátis.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-orange: #F26600;
+      --primary-orange-dark: #D95B00;
+      --primary-orange-light: rgba(242, 102, 0, 0.1);
+      --text-primary: #1F2028;
+      --text-secondary: #555;
+      --background-main: #FFFFFF;
+      --background-section: #F6F7F9;
+      --background-dark: #1C1F32;
+      --border-color: #E0E0E0;
+      --green-check: #48C74C;
+      --gray-institutional: #868686;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      color: var(--text-primary);
+      background: var(--background-main);
+      line-height: 1.6;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── NAV ── */
+    .nav {
+      background: var(--background-main);
+      border-bottom: 1px solid var(--border-color);
+      padding: 16px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo svg {
+      height: 36px;
+      width: auto;
+    }
+
+    .nav-cta {
+      background: var(--primary-orange);
+      color: #fff;
+      padding: 10px 24px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+
+    .nav-cta:hover {
+      background: var(--primary-orange-dark);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--background-dark);
+      padding: 80px 0 88px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero .container {
+      display: flex;
+      align-items: center;
+      gap: 60px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-content {
+      flex: 1;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: var(--primary-orange);
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      padding: 6px 16px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      color: #fff;
+      font-size: 44px;
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 span {
+      color: var(--primary-orange);
+    }
+
+    .hero p.hero-desc {
+      color: #b0b3c0;
+      font-size: 18px;
+      line-height: 1.7;
+      margin-bottom: 32px;
+      max-width: 520px;
+    }
+
+    .hero-cta {
+      display: inline-block;
+      background: var(--primary-orange);
+      color: #fff;
+      padding: 16px 40px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .hero-cta:hover {
+      background: var(--primary-orange-dark);
+      transform: translateY(-2px);
+    }
+
+    .hero-visual {
+      flex: 0 0 380px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-card {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 36px 32px;
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-card-icon {
+      width: 56px;
+      height: 56px;
+      background: var(--primary-orange);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .hero-card h3 {
+      color: #fff;
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .hero-card-prizes {
+      list-style: none;
+    }
+
+    .hero-card-prizes li {
+      color: #b0b3c0;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 15px;
+    }
+
+    .hero-card-prizes li:last-child {
+      border-bottom: none;
+    }
+
+    .hero-card-prizes .prize-icon {
+      color: var(--primary-orange);
+      font-size: 18px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ── HERO PHOTO BUBBLES ── */
+    .hero-bubbles {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .hero-bubble {
+      position: absolute;
+      border-radius: 50%;
+      background-color: #2a2d42;
+      background-size: cover;
+      background-position: center;
+      border: 3px solid rgba(242, 102, 0, 0.3);
+      animation: bubbleFloat 6s ease-in-out infinite;
+    }
+
+    /* Tamanhos e posições — ajuste as imagens trocando background-image */
+    .hero-bubble:nth-child(1) {
+      width: 110px; height: 110px;
+      top: 8%; left: 2%;
+      /* TROCAR: background-image: url('fotos/pessoa-1.jpg'); */
+      opacity: 0.85;
+      animation-delay: 0s;
+      border-color: rgba(242, 102, 0, 0.5);
+    }
+    .hero-bubble:nth-child(2) {
+      width: 80px; height: 80px;
+      top: 55%; left: 8%;
+      /* TROCAR: background-image: url('fotos/pessoa-2.jpg'); */
+      opacity: 0.6;
+      animation-delay: -1.5s;
+    }
+    .hero-bubble:nth-child(3) {
+      width: 64px; height: 64px;
+      top: 18%; left: 22%;
+      /* TROCAR: background-image: url('fotos/pessoa-3.jpg'); */
+      opacity: 0.45;
+      animation-delay: -3s;
+    }
+    .hero-bubble:nth-child(4) {
+      width: 96px; height: 96px;
+      top: 72%; left: 20%;
+      /* TROCAR: background-image: url('fotos/pessoa-4.jpg'); */
+      opacity: 0.7;
+      animation-delay: -0.8s;
+      border-color: rgba(242, 102, 0, 0.45);
+    }
+    .hero-bubble:nth-child(5) {
+      width: 72px; height: 72px;
+      top: 5%; right: 18%;
+      /* TROCAR: background-image: url('fotos/pessoa-5.jpg'); */
+      opacity: 0.5;
+      animation-delay: -2.2s;
+    }
+    .hero-bubble:nth-child(6) {
+      width: 120px; height: 120px;
+      top: 60%; right: 4%;
+      /* TROCAR: background-image: url('fotos/pessoa-6.jpg'); */
+      opacity: 0.75;
+      animation-delay: -4s;
+      border-color: rgba(242, 102, 0, 0.55);
+    }
+    .hero-bubble:nth-child(7) {
+      width: 56px; height: 56px;
+      top: 35%; right: 12%;
+      /* TROCAR: background-image: url('fotos/pessoa-7.jpg'); */
+      opacity: 0.4;
+      animation-delay: -1s;
+    }
+    .hero-bubble:nth-child(8) {
+      width: 88px; height: 88px;
+      bottom: 5%; left: 42%;
+      /* TROCAR: background-image: url('fotos/pessoa-8.jpg'); */
+      opacity: 0.55;
+      animation-delay: -2.8s;
+      border-color: rgba(242, 102, 0, 0.4);
+    }
+
+    @keyframes bubbleFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    /* ── COMO FUNCIONA ── */
+    .how-it-works {
+      padding: 80px 0;
+    }
+
+    .section-label {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--primary-orange);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+
+    .section-subtitle {
+      color: var(--text-secondary);
+      font-size: 17px;
+      margin-bottom: 48px;
+      max-width: 600px;
+    }
+
+    /* ── STEPS LAYOUT (mockup + cards) ── */
+    .steps-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 56px;
+      align-items: center;
+    }
+
+    .phone-mockup-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .phone-mockup-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 20px;
+      color: var(--text-primary);
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .phone-mockup-title span {
+      color: var(--primary-orange);
+    }
+
+    .phone-mockup {
+      width: 280px;
+      height: 560px;
+      background: #000;
+      border-radius: 40px;
+      padding: 12px;
+      position: relative;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.18), 0 0 0 1px rgba(255,255,255,0.08);
+    }
+
+    .phone-mockup-notch {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 28px;
+      background: #000;
+      border-radius: 0 0 16px 16px;
+      z-index: 3;
+    }
+
+    .phone-mockup-screen {
+      width: 100%;
+      height: 100%;
+      background: var(--background-section);
+      border-radius: 30px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Placeholder para vídeo — trocar pelo embed do case */
+    .phone-mockup-screen video,
+    .phone-mockup-screen iframe {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border: none;
+    }
+
+    .phone-mockup-placeholder {
+      text-align: center;
+      padding: 24px;
+    }
+
+    .phone-mockup-placeholder svg {
+      margin-bottom: 12px;
+      opacity: 0.4;
+    }
+
+    .phone-mockup-placeholder p {
+      font-size: 13px;
+      color: var(--gray-institutional);
+      line-height: 1.5;
+    }
+
+    .steps-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .step-card {
+      background: var(--background-section);
+      border-radius: 12px;
+      padding: 28px 24px;
+      position: relative;
+      transition: transform 0.2s;
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .step-card:hover {
+      transform: translateX(4px);
+    }
+
+    .step-number {
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      background: var(--primary-orange);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .step-card-content h3 {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .step-card-content p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ── CRITÉRIOS ── */
+    .criteria {
+      background: var(--background-section);
+      padding: 80px 0;
+    }
+
+    .criteria-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .criteria-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 28px;
+      border: 1px solid var(--border-color);
+      transition: border-color 0.2s;
+    }
+
+    .criteria-card:hover {
+      border-color: var(--primary-orange);
+    }
+
+    .criteria-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .criteria-card h3 {
+      font-size: 17px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .criteria-card h3 svg {
+      flex-shrink: 0;
+    }
+
+    .criteria-points {
+      background: var(--primary-orange);
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    .criteria-list {
+      list-style: none;
+    }
+
+    .criteria-list li {
+      padding: 6px 0;
+      color: var(--text-secondary);
+      font-size: 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .criteria-list li::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--primary-orange);
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 8px;
+    }
+
+    /* Card de duração (full width) */
+    .criteria-card.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .duration-grid {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .duration-item {
+      flex: 1;
+      min-width: 140px;
+      text-align: center;
+      padding: 16px;
+      background: var(--background-section);
+      border-radius: 8px;
+    }
+
+    .duration-item.highlight {
+      background: var(--primary-orange-light);
+      border: 2px solid var(--primary-orange);
+    }
+
+    .duration-item .time {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .duration-item .pts {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--primary-orange);
+    }
+
+    .duration-item.highlight .pts {
+      color: var(--primary-orange);
+    }
+
+    /* ── DICAS ── */
+    .tips {
+      padding: 80px 0;
+    }
+
+    .tips-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .tips-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .tip-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .tip-number {
+      width: 32px;
+      height: 32px;
+      min-width: 32px;
+      background: var(--primary-orange-light);
+      color: var(--primary-orange);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .tip-item p {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .tip-item strong {
+      color: var(--text-primary);
+    }
+
+    .tips-highlight-box {
+      background: var(--background-dark);
+      border-radius: 16px;
+      padding: 36px 32px;
+      color: #fff;
+    }
+
+    .tips-highlight-box h3 {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      line-height: 1.3;
+    }
+
+    .tips-highlight-box h3 span {
+      color: var(--primary-orange);
+    }
+
+    .min-score {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+    }
+
+    .min-score-number {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 48px;
+      color: var(--primary-orange);
+      line-height: 1;
+    }
+
+    .min-score-label {
+      font-size: 14px;
+      color: #b0b3c0;
+      line-height: 1.5;
+    }
+
+    .min-score-label strong {
+      color: #fff;
+      display: block;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .tips-highlight-box p {
+      font-size: 14px;
+      color: #b0b3c0;
+      line-height: 1.7;
+    }
+
+    /* ── PRÊMIOS ── */
+    .prizes {
+      background: var(--background-section);
+      padding: 80px 0;
+    }
+
+    .prizes-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    .prize-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 40px 36px;
+      text-align: center;
+      border: 1px solid var(--border-color);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .prize-card.featured {
+      border: 2px solid var(--primary-orange);
+    }
+
+    .prize-card.featured::before {
+      content: 'MELHOR CASE';
+      position: absolute;
+      top: 16px;
+      right: -32px;
+      background: var(--primary-orange);
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 1px;
+      padding: 6px 40px;
+      transform: rotate(45deg);
+    }
+
+    .prize-icon {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 20px;
+      background: var(--primary-orange-light);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .prize-card.featured .prize-icon {
+      background: var(--primary-orange);
+    }
+
+    .prize-card h3 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .prize-card .prize-desc {
+      color: var(--text-secondary);
+      font-size: 15px;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .prize-card .prize-condition {
+      font-size: 13px;
+      color: var(--gray-institutional);
+      padding-top: 16px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    /* ── REGRAS ── */
+    .rules {
+      padding: 80px 0;
+    }
+
+    .rules-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .rule-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 20px;
+      background: var(--background-section);
+      border-radius: 10px;
+    }
+
+    .rule-icon {
+      width: 36px;
+      height: 36px;
+      min-width: 36px;
+      background: var(--primary-orange-light);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .rule-item h4 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .rule-item p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ── CTA SECTION ── */
+    .cta-section {
+      background: var(--background-dark);
+      padding: 80px 0;
+    }
+
+    .cta-section .container {
+      text-align: center;
+    }
+
+    .cta-section h2 {
+      color: #fff;
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .cta-section h2 span {
+      color: var(--primary-orange);
+    }
+
+    .cta-section p {
+      color: #b0b3c0;
+      font-size: 17px;
+      margin-bottom: 36px;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-button {
+      display: inline-block;
+      background: var(--primary-orange);
+      color: #fff;
+      padding: 18px 48px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .cta-button:hover {
+      background: var(--primary-orange-dark);
+      transform: translateY(-2px);
+    }
+
+    .cta-deadline {
+      margin-top: 16px;
+      color: #b0b3c0;
+      font-size: 14px;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      padding: 32px 0;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .footer .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-logo svg {
+      height: 28px;
+      width: auto;
+    }
+
+    .footer p {
+      color: var(--gray-institutional);
+      font-size: 13px;
+    }
+
+    /* ── RESPONSIVO ── */
+    @media (max-width: 960px) {
+      .hero .container {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .hero p.hero-desc {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero-visual {
+        flex: none;
+        width: 100%;
+        max-width: 400px;
+      }
+
+      .hero-bubbles {
+        display: none;
+      }
+
+      .steps-layout {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .phone-mockup-wrapper {
+        order: 2;
+      }
+
+      .steps-grid {
+        order: 1;
+      }
+
+      .criteria-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .criteria-card.full-width {
+        grid-column: auto;
+      }
+
+      .tips-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .prizes-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .rules-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero {
+        padding: 48px 0 56px;
+      }
+
+      .hero h1 {
+        font-size: 32px;
+      }
+
+      .section-title {
+        font-size: 26px;
+      }
+
+      .cta-section h2 {
+        font-size: 28px;
+      }
+
+      .duration-grid {
+        flex-direction: column;
+      }
+
+      .nav-cta {
+        padding: 8px 16px;
+        font-size: 13px;
+      }
+
+      .phone-mockup {
+        width: 240px;
+        height: 480px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="container">
+      <a href="https://clubpetro.com" class="nav-logo" aria-label="ClubPetro">
+        <svg viewBox="0 0 846.3 295.3" xmlns="http://www.w3.org/2000/svg">
+          <g>
+            <g>
+              <path fill="#6D6E71" d="M92.6,175.4c-7.5-7.4-11.3-17-11.3-28.5s3.8-21.2,11.4-28.5c7.7-7.5,17.4-11.3,29.4-11.3c15.5,0,29.1,7.7,35.4,21.2l-15.7,8.6c-4.6-7.7-11.1-11.6-19.4-11.6c-6.3,0-11.4,2.1-15.5,6.3c-4,4-6.1,9.2-6.1,15.3c0,6.3,1.9,11.4,6,15.6c4,4,9.2,6.1,15.2,6.1c7.9,0,16-4.7,19.4-11.4l15.9,9.3c-6.5,12.3-20.1,20.1-35.7,20.1C109.7,186.5,100.1,182.8,92.6,175.4z"/>
+              <path fill="#6D6E71" d="M205.7,152.8v-43.9h19.6v43.9c0,9.6,5.7,15.9,15.2,15.9c9.5,0,15.2-6.3,15.2-15.9v-43.9h19.6v43.9c0,21.3-13.1,33.8-34.8,33.8C218.9,186.6,205.7,174.1,205.7,152.8z"/>
+              <path fill="#6D6E71" d="M554.4,153.8h-57c2.8,10.7,10.2,16.2,22.1,16.2c8.2,0,18-3.2,24.5-7.7l7.8,13.8c-9.6,7-20.6,10.4-33.1,10.4c-13.4,0-23.5-3.9-30.6-11.6c-7.1-7.7-10.6-17.1-10.6-28.1c0-11.6,3.6-21,11-28.5c7.4-7.5,16.9-11.3,28.5-11.3c11,0,20.2,3.5,27.3,10.3c7.1,6.8,10.7,16,10.7,27.9C555.1,147.8,554.8,150.7,554.4,153.8z M497.5,139.2H536c-1.8-9.9-8.9-15.9-18.9-15.9C507.2,123.3,499.8,129.3,497.5,139.2z"/>
+              <path fill="#6D6E71" d="M631.7,184.8v-75.9h18.8v10.2c4.6-8.2,11.6-12.3,20.9-12.3c3.1,0,6.1,0.6,9.2,1.7l-1.7,18.8c-3.2-1-6.3-1.5-9.1-1.5c-11.1,0-18.5,7.2-18.5,23v36.1H631.7z"/>
+              <path fill="#F2672A" d="M695.1,118.6c7.7-7.8,17.4-11.7,29.2-11.7s21.6,3.9,29.2,11.7c7.7,7.7,11.4,17.1,11.4,28.3c0,11.3-3.8,20.8-11.4,28.4c-7.7,7.7-17.4,11.6-29.2,11.6s-21.6-3.9-29.2-11.6c-7.7-7.7-11.4-17.1-11.4-28.4C683.7,135.7,687.4,126.2,695.1,118.6z M724.3,168.5c6,0,10.9-2.1,14.9-6.3c4-4.3,6.1-9.5,6.1-15.5c0-6-2.1-11.1-6.1-15.3c-4-4.2-8.9-6.3-14.9-6.3s-11,2.1-15,6.3c-4,4.2-6,9.3-6,15.3c0,6,2,11.1,6,15.5C713.3,166.5,718.3,168.5,724.3,168.5z"/>
+            </g>
+            <polygon fill="#6D6E71" points="169.3,86.9 169.3,184.8 189,184.8 189,79.8"/>
+            <path fill="#6D6E71" d="M362,118.6c-7.2-7.7-16.3-11.6-27-11.6c-9.2,0-16.9,3.6-23.1,10.7V79.8l-19.6,7.1v97.9h19.1v-9.5c6.3,7.5,14.1,11.3,23.7,11.3c10.7,0,19.8-3.8,27-11.3c7.2-7.7,10.9-17.1,10.9-28.4C372.8,135.7,369.2,126.2,362,118.6z M346.9,162.4c-3.9,4.2-8.9,6.3-15,6.3c-6.1,0-11.1-2.1-15-6.3c-3.9-4.3-5.8-9.5-5.8-15.6c0-6,2-11.1,5.8-15.3c3.9-4.3,8.9-6.4,15-6.4c6.1,0,11.1,2.1,15,6.3c3.9,4.2,5.8,9.3,5.8,15.5C352.8,152.9,350.8,158.1,346.9,162.4z"/>
+            <path fill="#6D6E71" d="M616.5,164.9c-4.6,2.6-8.9,3.9-12.7,3.9c-7.1,0-10.7-4.5-10.7-13.4v-30.1h25.1v-16.4h-25.1v-29L573.6,87v21.9h-12.5v16.4h12.4v31.3c0,19.6,9.1,29.9,26.5,29.9c8.8,0,16.2-2.1,22.4-6.3L616.5,164.9z"/>
+            <path fill="#6D6E71" d="M456.9,118.6c-7.1-7.7-16-11.6-26.7-11.6c-9.6,0-17.5,3.8-24.1,11.3v-9.3h-19.5v106.4l19.6-7.1v-32.2c6.5,7.1,14.5,10.6,23.8,10.6c10.7,0,19.6-3.9,26.7-11.6c7.1-7.7,10.7-17.1,10.7-28.3C467.5,135.7,464,126.2,456.9,118.6z M441.9,162.4c-3.9,4.2-8.9,6.3-15.2,6.3c-6.1,0-11.1-2.1-15-6.3c-3.9-4.2-5.8-9.3-5.8-15.5c0-6.1,2-11.3,5.8-15.5c3.9-4.2,8.9-6.3,15-6.3c6.3,0,11.3,2.1,15.2,6.3c3.9,4.2,5.8,9.3,5.8,15.5C447.7,153.1,445.8,158.2,441.9,162.4z"/>
+          </g>
+        </svg>
+      </a>
+      <a href="#participar" class="nav-cta">Quero participar</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <!-- Bubbles com fotos de clientes reais — trocar background-image no CSS -->
+    <div class="hero-bubbles">
+      <div class="hero-bubble" aria-hidden="true"></div>
+      <div class="hero-bubble" aria-hidden="true"></div>
+      <div class="hero-bubble" aria-hidden="true"></div>
+      <div class="hero-bubble" aria-hidden="true"></div>
+      <div class="hero-bubble" aria-hidden="true"></div>
+      <div class="hero-bubble" aria-hidden="true"></div>
+      <div class="hero-bubble" aria-hidden="true"></div>
+      <div class="hero-bubble" aria-hidden="true"></div>
+    </div>
+    <div class="container">
+      <div class="hero-content">
+        <span class="hero-badge">Campanha exclusiva</span>
+        <h1>Seu posto tem uma <span>história de sucesso</span>?<br>Conte e ganhe!</h1>
+        <p class="hero-desc">Grave um vídeo contando os resultados que você alcançou com o ClubPetro. Os melhores cases serão premiados — e o seu pode ser o próximo.</p>
+        <a href="#participar" class="hero-cta">Enviar meu case</a>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card">
+          <div class="hero-card-icon">
+            <svg width="28" height="28" fill="none" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.27 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z" fill="#fff"/></svg>
+          </div>
+          <h3>Prêmios da campanha</h3>
+          <ul class="hero-card-prizes">
+            <li>
+              <span class="prize-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="#F26600" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="10" stroke="#F26600" stroke-width="2"/></svg>
+              </span>
+              <span>Todos os qualificados: <strong style="color:#fff">50% de desconto</strong> em pacote de Cadastro ou SMS</span>
+            </li>
+            <li>
+              <span class="prize-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.27 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z" stroke="#F26600" stroke-width="2" fill="none"/></svg>
+              </span>
+              <span>Melhor case: <strong style="color:#fff">1 mensalidade grátis</strong></span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMO FUNCIONA -->
+  <section class="how-it-works">
+    <div class="container">
+      <p class="section-label">Como funciona</p>
+      <h2 class="section-title">Três passos para participar</h2>
+      <p class="section-subtitle">É simples: grave um vídeo, envie pelo formulário e aguarde a avaliação. Sem complicação.</p>
+
+      <div class="steps-layout">
+        <!-- Mockup celular — lado esquerdo -->
+        <div class="phone-mockup-wrapper">
+          <h3 class="phone-mockup-title">Veja como é <span>simples</span></h3>
+          <div class="phone-mockup">
+            <div class="phone-mockup-notch"></div>
+            <div class="phone-mockup-screen">
+              <!-- TROCAR: colocar <video> ou <iframe> com os cases aqui -->
+              <div class="phone-mockup-placeholder">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none"><polygon points="5 3 19 12 5 21 5 3" fill="#868686"/></svg>
+                <p>Vídeo de exemplo<br>será inserido aqui</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cards — lado direito, empilhados -->
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-number">1</div>
+            <div class="step-card-content">
+              <h3>Grave seu vídeo</h3>
+              <p>Pode ser no celular mesmo. Conte como era antes do ClubPetro e como está agora. Traga números e resultados reais.</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-number">2</div>
+            <div class="step-card-content">
+              <h3>Envie pelo formulário</h3>
+              <p>Preencha seus dados e faça o upload do vídeo. Aceitamos link do Google Drive ou YouTube (não listado).</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-number">3</div>
+            <div class="step-card-content">
+              <h3>Receba o resultado</h3>
+              <p>Nosso comitê avalia todos os cases com pontuação técnica. Atingiu 60 pontos? Já garante o prêmio de participação.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CRITÉRIOS DE AVALIAÇÃO -->
+  <section class="criteria" id="criterios">
+    <div class="container">
+      <p class="section-label">Avaliação</p>
+      <h2 class="section-title">Como seu case será avaliado</h2>
+      <p class="section-subtitle">Pontuação de 0 a 100, 100% técnica. Sem subjetividade — você sabe exatamente o que vale cada ponto.</p>
+
+      <div class="criteria-grid">
+        <!-- Conteúdo -->
+        <div class="criteria-card">
+          <div class="criteria-card-header">
+            <h3>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" stroke="#F26600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" stroke="#F26600" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Qualidade do Conteúdo
+            </h3>
+            <span class="criteria-points">40 pts</span>
+          </div>
+          <ul class="criteria-list">
+            <li>Resultados concretos com números (até 15 pts)</li>
+            <li>Antes vs Depois claro (até 10 pts)</li>
+            <li>História de uso no dia a dia (até 10 pts)</li>
+            <li>Autenticidade e naturalidade (até 5 pts)</li>
+          </ul>
+        </div>
+
+        <!-- Áudio -->
+        <div class="criteria-card">
+          <div class="criteria-card-header">
+            <h3>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" stroke="#F26600" stroke-width="2"/><path d="M19 10v2a7 7 0 0 1-14 0v-2" stroke="#F26600" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="19" x2="12" y2="23" stroke="#F26600" stroke-width="2" stroke-linecap="round"/></svg>
+              Qualidade do Áudio
+            </h3>
+            <span class="criteria-points">20 pts</span>
+          </div>
+          <ul class="criteria-list">
+            <li>Clareza do som do início ao fim (até 10 pts)</li>
+            <li>Sem ruído excessivo de fundo (até 5 pts)</li>
+            <li>Volume e articulação adequados (até 5 pts)</li>
+          </ul>
+        </div>
+
+        <!-- Imagem -->
+        <div class="criteria-card">
+          <div class="criteria-card-header">
+            <h3>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="2" y="3" width="20" height="14" rx="2" stroke="#F26600" stroke-width="2"/><path d="M8 21h8M12 17v4" stroke="#F26600" stroke-width="2" stroke-linecap="round"/></svg>
+              Qualidade da Imagem
+            </h3>
+            <span class="criteria-points">20 pts</span>
+          </div>
+          <ul class="criteria-list">
+            <li>Boa iluminação, rosto visível (até 7 pts)</li>
+            <li>Enquadramento adequado (até 5 pts)</li>
+            <li>Estabilidade — sem tremor (até 4 pts)</li>
+            <li>Resolução mínima 720p (até 4 pts)</li>
+          </ul>
+        </div>
+
+        <!-- Apresentação -->
+        <div class="criteria-card">
+          <div class="criteria-card-header">
+            <h3>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.27 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z" stroke="#F26600" stroke-width="2" fill="none"/></svg>
+              Apresentação Geral
+            </h3>
+            <span class="criteria-points">10 pts</span>
+          </div>
+          <ul class="criteria-list">
+            <li>Criatividade e abordagem original (até 5 pts)</li>
+            <li>Engajamento — prende a atenção (até 5 pts)</li>
+          </ul>
+        </div>
+
+        <!-- Duração (full width) -->
+        <div class="criteria-card full-width">
+          <div class="criteria-card-header">
+            <h3>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#F26600" stroke-width="2"/><path d="M12 6v6l4 2" stroke="#F26600" stroke-width="2" stroke-linecap="round"/></svg>
+              Duração do Vídeo
+            </h3>
+            <span class="criteria-points">10 pts</span>
+          </div>
+          <div class="duration-grid">
+            <div class="duration-item">
+              <div class="time">&lt; 30 segundos</div>
+              <div class="pts">2 pts</div>
+            </div>
+            <div class="duration-item">
+              <div class="time">30s a 1 minuto</div>
+              <div class="pts">7 pts</div>
+            </div>
+            <div class="duration-item highlight">
+              <div class="time">1 a 3 minutos</div>
+              <div class="pts">10 pts</div>
+            </div>
+            <div class="duration-item">
+              <div class="time">3 a 5 minutos</div>
+              <div class="pts">5 pts</div>
+            </div>
+            <div class="duration-item">
+              <div class="time">&gt; 5 minutos</div>
+              <div class="pts">2 pts</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DICAS -->
+  <section class="tips">
+    <div class="container">
+      <p class="section-label">Dicas</p>
+      <h2 class="section-title">Como gravar um case nota 10</h2>
+      <p class="section-subtitle">Você não precisa de equipamento profissional. Com um celular e essas dicas, já dá pra mandar muito bem.</p>
+
+      <div class="tips-layout">
+        <ul class="tips-list">
+          <li class="tip-item">
+            <span class="tip-number">1</span>
+            <p><strong>Escolha um ambiente tranquilo</strong> no posto, de preferência com boa luz natural. Evite horários de pico com barulho de bombas.</p>
+          </li>
+          <li class="tip-item">
+            <span class="tip-number">2</span>
+            <p><strong>Apoie o celular</strong> em algum lugar firme ou peça para alguém segurar. Estabilidade faz diferença na nota.</p>
+          </li>
+          <li class="tip-item">
+            <span class="tip-number">3</span>
+            <p><strong>Comece se apresentando:</strong> seu nome, cargo, nome e cidade do posto. Isso já cria conexão.</p>
+          </li>
+          <li class="tip-item">
+            <span class="tip-number">4</span>
+            <p><strong>Conte o antes e o depois.</strong> Como era a operação antes do ClubPetro? O que mudou? Seja específico.</p>
+          </li>
+          <li class="tip-item">
+            <span class="tip-number">5</span>
+            <p><strong>Traga números!</strong> Volume de cadastros, aumento de vendas, ticket médio, taxa de retorno dos clientes...</p>
+          </li>
+          <li class="tip-item">
+            <span class="tip-number">6</span>
+            <p><strong>Fale naturalmente.</strong> Não precisa decorar um texto. O mais importante é ser verdadeiro.</p>
+          </li>
+          <li class="tip-item">
+            <span class="tip-number">7</span>
+            <p><strong>Grave na horizontal</strong> (paisagem) para melhor qualidade e enquadramento.</p>
+          </li>
+          <li class="tip-item">
+            <span class="tip-number">8</span>
+            <p><strong>Fique entre 1 e 3 minutos.</strong> É o tempo ideal para contar sua história e garantir a pontuação máxima.</p>
+          </li>
+        </ul>
+
+        <div class="tips-highlight-box">
+          <h3>Pontuação mínima para <span>ganhar o prêmio</span></h3>
+          <div class="min-score">
+            <span class="min-score-number">60</span>
+            <span class="min-score-label">
+              <strong>de 100 pontos</strong>
+              para qualificar seu case
+            </span>
+          </div>
+          <p>Não atingiu os 60 pontos? Sem problema. Você recebe um feedback com os pontos de melhoria e pode reenviar seu vídeo dentro do prazo da campanha.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRÊMIOS -->
+  <section class="prizes" id="premios">
+    <div class="container">
+      <p class="section-label">Premiação</p>
+      <h2 class="section-title">O que você ganha</h2>
+      <p class="section-subtitle">Participou e qualificou? Já leva prêmio. Fez o melhor case? Leva ainda mais.</p>
+
+      <div class="prizes-grid">
+        <div class="prize-card">
+          <div class="prize-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="#F26600" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="10" stroke="#F26600" stroke-width="2"/></svg>
+          </div>
+          <h3>50% de desconto</h3>
+          <p class="prize-desc">Na compra de pacote de <strong>Cadastro</strong> ou <strong>SMS</strong>. Válido para todos os cases que atingirem a pontuação mínima de 60 pontos.</p>
+          <p class="prize-condition">Válido por 60 dias após a divulgação do resultado</p>
+        </div>
+
+        <div class="prize-card featured">
+          <div class="prize-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.27 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z" fill="#fff"/></svg>
+          </div>
+          <h3>1 mensalidade grátis</h3>
+          <p class="prize-desc">O case com a <strong>maior pontuação</strong> ganha uma mensalidade completa como crédito. Em caso de empate, todos os primeiros lugares são premiados.</p>
+          <p class="prize-condition">Crédito aplicado no mês seguinte ao resultado</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REGRAS RÁPIDAS -->
+  <section class="rules">
+    <div class="container">
+      <p class="section-label">Regras</p>
+      <h2 class="section-title">Informações importantes</h2>
+      <p class="section-subtitle" style="margin-bottom: 36px;">Tudo o que você precisa saber antes de enviar seu case.</p>
+
+      <div class="rules-grid">
+        <div class="rule-item">
+          <div class="rule-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="#F26600" stroke-width="2"/><circle cx="9" cy="7" r="4" stroke="#F26600" stroke-width="2"/></svg>
+          </div>
+          <div>
+            <h4>Quem pode participar</h4>
+            <p>Clientes ativos do ClubPetro há pelo menos 3 meses. Um envio por posto.</p>
+          </div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><polygon points="23 7 16 12 23 17 23 7" stroke="#F26600" stroke-width="2" fill="none"/><rect x="1" y="5" width="15" height="14" rx="2" stroke="#F26600" stroke-width="2"/></svg>
+          </div>
+          <div>
+            <h4>Formato</h4>
+            <p>Vídeo em 720p ou superior. Gravado no celular mesmo — não precisa ser profissional.</p>
+          </div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#F26600" stroke-width="2"/><path d="M12 6v6l4 2" stroke="#F26600" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <div>
+            <h4>Duração ideal</h4>
+            <p>Entre 1 e 3 minutos. Você ganha a pontuação máxima nesse intervalo.</p>
+          </div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" stroke="#F26600" stroke-width="2"/><line x1="4" y1="22" x2="4" y2="15" stroke="#F26600" stroke-width="2"/></svg>
+          </div>
+          <div>
+            <h4>Avaliação</h4>
+            <p>Comitê interno (Marketing + CS). Pontuação 100% técnica, sem votação popular.</p>
+          </div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="#F26600" stroke-width="2"/><polyline points="22,6 12,13 2,6" stroke="#F26600" stroke-width="2"/></svg>
+          </div>
+          <div>
+            <h4>Não atingiu 60 pts?</h4>
+            <p>Você recebe feedback e pode reenviar seu vídeo enquanto a campanha estiver aberta.</p>
+          </div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#F26600" stroke-width="2"/></svg>
+          </div>
+          <div>
+            <h4>Uso de imagem</h4>
+            <p>Ao enviar, você autoriza o uso do vídeo nos canais do ClubPetro (site, redes sociais, materiais).</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="cta-section" id="participar">
+    <div class="container">
+      <h2>Pronto para contar a <span>sua história</span>?</h2>
+      <p>Grave seu vídeo, mostre os resultados do seu posto e concorra aos prêmios. É rápido, simples e vale a pena.</p>
+      <a href="#formulario" class="cta-button">Enviar meu case agora</a>
+      <p class="cta-deadline">Inscrições abertas por 30 dias a partir do lançamento da campanha</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <a href="https://clubpetro.com" class="footer-logo" aria-label="ClubPetro">
+        <svg viewBox="0 0 846.3 295.3" xmlns="http://www.w3.org/2000/svg">
+          <g>
+            <g>
+              <path fill="#6D6E71" d="M92.6,175.4c-7.5-7.4-11.3-17-11.3-28.5s3.8-21.2,11.4-28.5c7.7-7.5,17.4-11.3,29.4-11.3c15.5,0,29.1,7.7,35.4,21.2l-15.7,8.6c-4.6-7.7-11.1-11.6-19.4-11.6c-6.3,0-11.4,2.1-15.5,6.3c-4,4-6.1,9.2-6.1,15.3c0,6.3,1.9,11.4,6,15.6c4,4,9.2,6.1,15.2,6.1c7.9,0,16-4.7,19.4-11.4l15.9,9.3c-6.5,12.3-20.1,20.1-35.7,20.1C109.7,186.5,100.1,182.8,92.6,175.4z"/>
+              <path fill="#6D6E71" d="M205.7,152.8v-43.9h19.6v43.9c0,9.6,5.7,15.9,15.2,15.9c9.5,0,15.2-6.3,15.2-15.9v-43.9h19.6v43.9c0,21.3-13.1,33.8-34.8,33.8C218.9,186.6,205.7,174.1,205.7,152.8z"/>
+              <path fill="#6D6E71" d="M554.4,153.8h-57c2.8,10.7,10.2,16.2,22.1,16.2c8.2,0,18-3.2,24.5-7.7l7.8,13.8c-9.6,7-20.6,10.4-33.1,10.4c-13.4,0-23.5-3.9-30.6-11.6c-7.1-7.7-10.6-17.1-10.6-28.1c0-11.6,3.6-21,11-28.5c7.4-7.5,16.9-11.3,28.5-11.3c11,0,20.2,3.5,27.3,10.3c7.1,6.8,10.7,16,10.7,27.9C555.1,147.8,554.8,150.7,554.4,153.8z M497.5,139.2H536c-1.8-9.9-8.9-15.9-18.9-15.9C507.2,123.3,499.8,129.3,497.5,139.2z"/>
+              <path fill="#6D6E71" d="M631.7,184.8v-75.9h18.8v10.2c4.6-8.2,11.6-12.3,20.9-12.3c3.1,0,6.1,0.6,9.2,1.7l-1.7,18.8c-3.2-1-6.3-1.5-9.1-1.5c-11.1,0-18.5,7.2-18.5,23v36.1H631.7z"/>
+              <path fill="#F2672A" d="M695.1,118.6c7.7-7.8,17.4-11.7,29.2-11.7s21.6,3.9,29.2,11.7c7.7,7.7,11.4,17.1,11.4,28.3c0,11.3-3.8,20.8-11.4,28.4c-7.7,7.7-17.4,11.6-29.2,11.6s-21.6-3.9-29.2-11.6c-7.7-7.7-11.4-17.1-11.4-28.4C683.7,135.7,687.4,126.2,695.1,118.6z M724.3,168.5c6,0,10.9-2.1,14.9-6.3c4-4.3,6.1-9.5,6.1-15.5c0-6-2.1-11.1-6.1-15.3c-4-4.2-8.9-6.3-14.9-6.3s-11,2.1-15,6.3c-4,4.2-6,9.3-6,15.3c0,6,2,11.1,6,15.5C713.3,166.5,718.3,168.5,724.3,168.5z"/>
+            </g>
+            <polygon fill="#6D6E71" points="169.3,86.9 169.3,184.8 189,184.8 189,79.8"/>
+            <path fill="#6D6E71" d="M362,118.6c-7.2-7.7-16.3-11.6-27-11.6c-9.2,0-16.9,3.6-23.1,10.7V79.8l-19.6,7.1v97.9h19.1v-9.5c6.3,7.5,14.1,11.3,23.7,11.3c10.7,0,19.8-3.8,27-11.3c7.2-7.7,10.9-17.1,10.9-28.4C372.8,135.7,369.2,126.2,362,118.6z M346.9,162.4c-3.9,4.2-8.9,6.3-15,6.3c-6.1,0-11.1-2.1-15-6.3c-3.9-4.3-5.8-9.5-5.8-15.6c0-6,2-11.1,5.8-15.3c3.9-4.3,8.9-6.4,15-6.4c6.1,0,11.1,2.1,15,6.3c3.9,4.2,5.8,9.3,5.8,15.5C352.8,152.9,350.8,158.1,346.9,162.4z"/>
+            <path fill="#6D6E71" d="M616.5,164.9c-4.6,2.6-8.9,3.9-12.7,3.9c-7.1,0-10.7-4.5-10.7-13.4v-30.1h25.1v-16.4h-25.1v-29L573.6,87v21.9h-12.5v16.4h12.4v31.3c0,19.6,9.1,29.9,26.5,29.9c8.8,0,16.2-2.1,22.4-6.3L616.5,164.9z"/>
+            <path fill="#6D6E71" d="M456.9,118.6c-7.1-7.7-16-11.6-26.7-11.6c-9.6,0-17.5,3.8-24.1,11.3v-9.3h-19.5v106.4l19.6-7.1v-32.2c6.5,7.1,14.5,10.6,23.8,10.6c10.7,0,19.6-3.9,26.7-11.6c7.1-7.7,10.7-17.1,10.7-28.3C467.5,135.7,464,126.2,456.9,118.6z M441.9,162.4c-3.9,4.2-8.9,6.3-15.2,6.3c-6.1,0-11.1-2.1-15-6.3c-3.9-4.2-5.8-9.3-5.8-15.5c0-6.1,2-11.3,5.8-15.5c3.9-4.2,8.9-6.3,15-6.3c6.3,0,11.3,2.1,15.2,6.3c3.9,4.2,5.8,9.3,5.8,15.5C447.7,153.1,445.8,158.2,441.9,162.4z"/>
+          </g>
+        </svg>
+      </a>
+      <p>&copy; 2026 ClubPetro. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

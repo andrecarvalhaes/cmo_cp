@@ -56,6 +56,15 @@ Antes de criar **qualquer comunicação** (texto, email, post, apresentação, p
 2. Para detalhes completos: `memory/integracoes/brand-identity.md`
 3. Seguir checklist rápido do final do arquivo de referência
 
+## Auto-Registro de Erros (OBRIGATÓRIO)
+Sempre que resolver um problema após tentativas com erro:
+1. Consultar `memory/operacional.md` para verificar se o padrão já está documentado
+2. Se NÃO estiver: adicionar o padrão correto no arquivo, na seção adequada
+3. Se estiver mas incompleto: atualizar com a nova informação
+4. Formato: o que fazer (correto) e o que NÃO fazer (erro que aconteceu)
+
+**Antes de executar qualquer operação de API, encoding ou integração**: consultar `memory/operacional.md` para evitar erros já conhecidos.
+
 ## Idioma
 - Comunicação em português brasileiro
 - Código e configs em inglês

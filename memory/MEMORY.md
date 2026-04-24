@@ -16,6 +16,9 @@
 - Canva (MCP ativo)
 - **Vendemais** — sistema integrador interno (React+TS+Vite, repo em `C:\Users\ClubPetro-123\Documents\vendemais`). Workflow: branch → commit → PR (desc PT-BR) → link de teste → aprovação → merge
 
+## Padrões Operacionais (CONSULTAR ANTES DE AGIR)
+- **`memory/operacional.md`** — Erros conhecidos, padrões corretos, armadilhas de API/encoding. Auto-atualizado a cada erro resolvido.
+
 ## Integrações Detalhadas
 Guias completos em `memory/integracoes/`:
 - `kommo.md` — Kommo CRM: pipeline, campos, estágios, motivos de perda
@@ -35,6 +38,7 @@ Guias completos em `memory/integracoes/`:
 - `scoring-designers.md` — vm_interno_mkt: pontuação designers, tabela de scoring por tipo, workflow N8N (event-driven, vulnerável a desconexão), procedimento de reprocessamento
 - `brand-identity.md` — Brand Book / Identidade Visual: regras de logo, cores, tipografia, tom de voz, templates. Assets em `brand/`
 - `blog-strategy.md` — Arquitetura de Conteúdo do Blog: 12 topic clusters, 6 categorias, 11 pillar pages, diagnóstico GSC, quick wins, plano de priorização
+- `kommo-loss-webhook.md` — Webhook Kommo→RD Station: sincroniza leads perdidos (Edge Function kommo-loss-webhook v5)
 
 ## Brand Book — Referência Rápida
 - **Arquivo de consulta obrigatória**: `brand/brand-quick-reference.md` (checklist + regras + glossário)
@@ -81,6 +85,14 @@ Guias completos em `memory/integracoes/`:
 - `/pendencia` - intake inteligente: entende demanda, faz análise SCQA, cria tarefa no ClickUp, mapeia soluções ranqueadas por ICE como comentários "IA:"
 - `/atualizar-kommo` - sync completo aux_kommo: exporta TODOS os leads do Kommo (API 3 req/s) + contatos, TRUNCATE + INSERT no Supabase via PostgREST, recria indexes
 - `/review-seo-blog` - auditoria SEO do blog WordPress (blog.clubpetro.com): conecta via REST API, scoring 0-100 por post (6 dimensões), cruza GSC+GA4, plano "eu faço via API" vs "você faz manualmente"
+
+## Documentação de Processos
+- **Local oficial**: ClickUp Docs → "[OFICIAL] Documentação Linha" (ID: `8cdvx3h-133393`)
+- **URL**: https://app.clickup.com/9007133809/v/dc/8cdvx3h-133393
+- **Regra**: toda documentação de processo/onboarding deve ser criada como **subpágina** deste doc
+- **Tom**: não técnico, voltado para o time entender como as coisas funcionam
+- Páginas existentes:
+  - Webhook: Leads Perdidos (Kommo para RD Station) — `8cdvx3h-460493`
 
 ## WordPress Blog
 - **CMS**: WordPress + SEOPress Pro + Elementor
